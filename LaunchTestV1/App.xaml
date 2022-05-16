@@ -101,7 +101,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate>
-                        <Border BorderBrush="{StaticResource ComboboxMainColorDark2}" BorderThickness="2" Width="610" Margin="0,3,0,0">
+                        <Border BorderBrush="{StaticResource ComboboxMainColorDark2}" BorderThickness="2" Width="550" Margin="0,3,0,0">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="20"></RowDefinition>

@@ -55,9 +55,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\ClassAndSubject.cs" />
     <Compile Include="Model\StudentMeta.cs" />
+    <Compile Include="Model\Summary.cs" />
+    <Compile Include="Model\TestSummaryBindModel.cs" />
     <Compile Include="Repos\DBAction2.cs" />
     <Compile Include="Repos\GMeetRepo.cs" />
+    <Compile Include="Repos\TestInfo.cs" />
+    <Compile Include="Tools\BindableBase.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

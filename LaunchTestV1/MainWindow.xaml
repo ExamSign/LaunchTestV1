@@ -47,54 +47,91 @@
                     </StackPanel>
                     <!--Test Id-->
                     <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock Text="Test Type" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Left"></TextBlock>
+                        <TextBlock Text="Test Id" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Left"></TextBlock>
                         <ComboBox x:Name="xTestIDCmb" Style="{StaticResource CmoboboxStyle}" Foreground="Black" FontSize="14" FontWeight="SemiBold" Width="160" Height="30"
-                                  SelectionChanged="xTestTypeCmb_SelectionChanged"></ComboBox>
+                                  SelectionChanged="xTestIDCmb_SelectionChanged"></ComboBox>
                     </StackPanel>
 
                     <Grid Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="4" Background="{StaticResource ComboboxMainColorD1}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="65"></RowDefinition>
+                            <RowDefinition Height="40"></RowDefinition>
                             <RowDefinition></RowDefinition>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        
+
                         <!--Test For-->
                         <StackPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
                             <TextBlock Text="Test For" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Left"></TextBlock>
-                            <ComboBox x:Name="xTestFor" Style="{StaticResource CmoboboxStyle}" Foreground="Black" FontSize="14" FontWeight="SemiBold" Width="160" Height="30"
-                                  SelectionChanged="xTestFor_SelectionChanged"></ComboBox>
+                            <ComboBox x:Name="xSection" Style="{StaticResource CmoboboxStyle}" Foreground="Black" FontSize="14" FontWeight="SemiBold" Width="160" Height="30"
+                                  SelectionChanged="xSection_SelectionChanged"></ComboBox>
                         </StackPanel>
-                        
-                        <CheckBox x:Name="xTestForCB" Content="Select particular students" Grid.Column="1" VerticalAlignment="Center" Margin="0,10,0,0"></CheckBox>
+
+                        <CheckBox x:Name="xTestForCB" Checked="xTestForCB_Checked" Unchecked="xTestForCB_Unchecked" Content="Select particular students" 
+                                  Grid.Column="1" VerticalAlignment="Center" Margin="0,10,0,0"></CheckBox>
+
+                        <!--Taxonomy list-->
+                        <ListView x:Name="xSelectedSectionList" Background="{StaticResource ComboboxMainColor}" SelectionMode="Multiple" Height="35" VerticalAlignment="Center" 
+                                  Grid.Row="1" Grid.ColumnSpan="2" BorderThickness="0" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                                  ScrollViewer.VerticalScrollBarVisibility="Disabled" BorderBrush="{StaticResource ComboboxMainColorDark3}">
+                            
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"></StackPanel>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Border Margin="2,0,0,0" BorderThickness="1" BorderBrush="{StaticResource ComboboxMainColorDark3}" x:Name="thisPanel" Width="30" Height="30" VerticalAlignment="Center">
+                                                    <Grid>
+                                                        <TextBlock Text="{Binding}" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                                                    </Grid>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="thisPanel" Property="Background" Value="#ffe0bd"></Setter>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
 
 
-                        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Visibility="Visible">
-                            <Grid>
+
+                        <StackPanel x:Name="xRollNumberPanel" Grid.Row="2" Grid.ColumnSpan="2" Visibility="Visible">
+                            <Grid >
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition></ColumnDefinition>
                                     <ColumnDefinition></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
                                 <!--Roll No.-->
                                 <StackPanel x:Name="xMarkCountPanel" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                    <TextBlock Text="Roll No." FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Left"></TextBlock>
+                                    <TextBlock Text="Student Name" FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Left"></TextBlock>
                                     <Border Background="{StaticResource ComboboxMainColorDark1}" Height="30" Width="160">
                                         <Grid Width="153" Height="28" Background="{StaticResource ComboboxMainColor}" VerticalAlignment="Center">
-                                            <TextBox x:Name="xRollNoTb" FontSize="14" Height="30" BorderThickness="0" Background="Transparent" FontWeight="SemiBold"
-                                         TextChanged="xRollNoTb_TextChanged" TextAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center"></TextBox>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="19*"/>
+                                                <ColumnDefinition Width="32*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox x:Name="xRollNoTB" FontSize="14" Height="30" BorderThickness="0" Background="Transparent" FontWeight="SemiBold"
+                                         TextChanged="xRollNoTb_TextChanged" TextAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0,-1"></TextBox>
                                         </Grid>
                                     </Border>
                                 </StackPanel>
-
-                                <Button x:Name="xAddStudent" Grid.Column="1" VerticalAlignment="Bottom" Content="ADD" HorizontalAlignment="Left"
-                                        Style="{StaticResource xActionButton}" Width="60" Height="30"></Button>
                             </Grid>
-                            
 
-                            <ListView Grid.Row="1">
+
+                            <ListView x:Name="xStudentSearchReslutBox" Grid.Row="1">
                                 <ListViewItem Content="ListItem 1"></ListViewItem>
                                 <ListViewItem Content="ListItem 1"></ListViewItem>
                                 <ListViewItem Content="ListItem 1"></ListViewItem>
@@ -102,20 +139,51 @@
                                 <ListViewItem Content="ListItem 1"></ListViewItem>
                             </ListView>
                         </StackPanel>
-                        
-                        
-                        
+
+
+
                     </Grid>
                 </Grid>
             </Border>
 
             <Border Grid.Column="1">
                 <Grid>
-                    <!--Topic item list-->
-                    <ListView x:Name="xTestSummary" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition  Height="2*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <!--Test Detail panel-->
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+
+                        <!--Header-->
+                        <Border Background="{StaticResource ComboboxMainColorDark1}" CornerRadius="2" BorderThickness="2" BorderBrush="{StaticResource ComboboxMainColorDark3}" 
+                                VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="Test Details" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="15,3,15,3"></TextBlock>
+                        </Border>
+
+                        <!--Topic item list-->
+                        <ListView x:Name="xTestSummary" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                         Grid.Row="1" BorderThickness="2" ItemContainerStyle="{StaticResource xTestSummaryDetailStyle}" 
                           BorderBrush="{StaticResource ComboboxMainColorDark1}" Margin="0">
-                    </ListView>
+                        </ListView>
+                    </Grid>
+
+
+                    <Grid>
+                        <ListView x:Name="xStudentsList">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal">
+                                    </WrapPanel>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                        </ListView>
+                    </Grid>
                 </Grid>
             </Border>
         </Grid>
