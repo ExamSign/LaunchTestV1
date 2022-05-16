@@ -29,6 +29,8 @@ namespace LaunchTestV1
         string SelectedSection = "ALL";
 
         List<StudentMeta> StudentMasterList = new List<StudentMeta>();
+        ObservableCollection<StudentMeta> ContextStudentList = new ObservableCollection<StudentMeta>();
+
         List<StudentMeta> SelectedStudentList = new List<StudentMeta>();
         ObservableCollection<string> SelectedSectionList = new ObservableCollection<string>(); 
         List<TestInfo> TestItemMaster = new List<TestInfo>();
@@ -51,9 +53,9 @@ namespace LaunchTestV1
                 xSubjectCmb.ItemsSource = GMeetRepo.GetSubjects(ContextClass.Grade);
                 xSection.ItemsSource = GetSection(ContextClass.Grade);
                 StudentMasterList = GMeetRepo.GetStudents(ContextClass.Grade);
+                GetStudentList();
             }
         }
-        
         private void xSubjectCmb_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (xSubjectCmb.SelectedIndex != -1)
@@ -63,7 +65,6 @@ namespace LaunchTestV1
                 xTestTypeCmb.ItemsSource = TestItemMaster.Select(o => o.TestType).Distinct().ToList();
             }
         }
-
         private void xTestTypeCmb_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if(xTestTypeCmb.SelectedIndex >= 0)
@@ -74,45 +75,76 @@ namespace LaunchTestV1
                 xTestIDCmb.ItemsSource = contextTestIdList;
             }
         }
-
-        private void xSection_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (xSection.SelectedIndex >= 0)
-            {
-                SelectedSection = xSection.SelectedItem.ToString();
-                SectionSelectionProcess(SelectedSection);
-
-                if (SelectedSection == "ALL")
-                    xTestForCB.IsChecked = false;
-            }
-        }
-
-        private void xRollNoTb_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
         private void xTestIDCmb_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(xTestIDCmb.SelectedIndex >= 0)
+            if (xTestIDCmb.SelectedIndex >= 0)
             {
                 SelectedTestId = xTestIDCmb.SelectedItem.ToString();
                 xTestSummary.ItemsSource = GetTestDetails(SelectedTestId);
             }
         }
+        //
+        private void xSection_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (xSection.SelectedIndex >= 0)
+            {
+                SelectedSection = xSection.SelectedItem.ToString();
+                SectionSelectionProcess();
+                if (SelectedSection == "ALL")
+                    xTestForCB.IsChecked = false;
+
+                xSection.SelectedIndex = -1;
+            }
+        }
+        private void xSelectedSectionList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (xSelectedSectionList.SelectedIndex >= 0)
+            {
+                string removeItem = xSelectedSectionList.SelectedItem.ToString();
+                SelectedSectionList.Remove(removeItem);
+
+                ContextStudentList.Clear();
+                foreach (var item in StudentMasterList)
+                {
+                    if (SelectedSectionList.Contains(item.Section))
+                        ContextStudentList.Add(item);
+                }
+
+                if (SelectedSectionList.Count == 1)
+                    xRollNumberPanel.Visibility = Visibility.Visible;
+                else
+                    xRollNumberPanel.Visibility = Visibility.Collapsed;
+            }
+        }
+        //
         private void xTestForCB_Checked(object sender, RoutedEventArgs e)
         {
-            if (SelectedSection == "ALL")
-                xTestForCB.IsChecked = false;
-            else
-                xTestForCB.IsChecked = true;
+            xTestForCB.IsChecked = true;
 
             if (xTestForCB.IsChecked == true)
-                xRollNumberPanel.Visibility = Visibility.Visible;
+                xSearchStudentPanel.Visibility = Visibility.Visible;
             else
-                xRollNumberPanel.Visibility = Visibility.Collapsed;
+                xSearchStudentPanel.Visibility = Visibility.Collapsed;
         }
+        private void xTestForCB_Unchecked(object sender, RoutedEventArgs e)
+        {
+            xTestForCB.IsChecked = false;
+            xSearchStudentPanel.Visibility = Visibility.Collapsed;
+        }
+        //
+        private void xRollNoTb_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if(xRollNoTB.Text.Length > 0)
+            {
+                //GetStudentList();
+            }
+        }
+        
 
+        void GetStudentList()
+        {
+            xStudentList.ItemsSource = ContextStudentList;
+        }
         List<Summary> GetTestDetails(string testID)
         {
             List<TestSummaryBindModel> TestDetails = TestInfo.GetTestDetails(testID);
@@ -151,31 +183,43 @@ namespace LaunchTestV1
             xTestTypeCmb.ItemsSource = null;
             xTestIDCmb.ItemsSource = null;
             xTestSummary.ItemsSource = null;
-            xStudentSearchReslutBox.ItemsSource = null;
+            xSelectedStudentList.ItemsSource = null;
 
             xRollNoTB.Text = string.Empty;
         }
-
-        private void xTestForCB_Unchecked(object sender, RoutedEventArgs e)
+        void SectionSelectionProcess()
         {
-            xTestForCB.IsChecked = false;
-            xRollNumberPanel.Visibility = Visibility.Collapsed;
-        }
-
-        void SectionSelectionProcess(string sectionItem)
-        {
-            if(sectionItem == "ALL")
+            if(SelectedSection == "ALL")
             {
                 List<string> section = GetSection(ContextClass.Grade);
                 section.RemoveAt(0);
+
                 SelectedSectionList = new ObservableCollection<string>(section);
                 xSelectedSectionList.ItemsSource = SelectedSectionList;
+                //
+                ContextStudentList.Clear();
+                foreach (var item in StudentMasterList)
+                    ContextStudentList.Add(item);
             }
             else
             {
-                if (!SelectedSectionList.Contains(sectionItem))
-                    SelectedSectionList.Add(sectionItem);
+                if (!SelectedSectionList.Contains(SelectedSection))
+                    SelectedSectionList.Add(SelectedSection);
+
+                //
+                ContextStudentList.Clear();
+                foreach (var item in StudentMasterList)
+                {
+                    if (SelectedSectionList.Contains(item.Section))
+                        ContextStudentList.Add(item);
+                }
             }
-        }
+            if (SelectedSectionList.Count == 1)
+                xRollNumberPanel.Visibility = Visibility.Visible;
+            else
+                xRollNumberPanel.Visibility = Visibility.Collapsed;
+
+            xSelectedStudentList.ItemsSource = ContextStudentList;
+        }        
     }
 }
