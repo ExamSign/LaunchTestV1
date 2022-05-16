@@ -1,0 +1,123 @@
+﻿<Window x:Class="LaunchTestV1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LaunchTestV1"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="768" Width="1024" Background="{DynamicResource MainGridBackground}">
+    <Grid>
+        <Grid x:Name="xMainGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="1.5*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Border Background="{StaticResource ComboboxMainColor3}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="70"></RowDefinition>
+                        <RowDefinition Height="70"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <!--Class-->
+                    <StackPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="Class" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Left"></TextBlock>
+                        <ComboBox x:Name="xClassCmb" Style="{StaticResource CmoboboxStyle}" Foreground="Black" FontSize="14" FontWeight="SemiBold" Width="150" Height="30"
+                                  SelectionChanged="xClassCmb_SelectionChanged"></ComboBox>
+                    </StackPanel>
+                    <!--Subject-->
+                    <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="Subject" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Left"></TextBlock>
+                        <ComboBox x:Name="xSubjectCmb" Style="{StaticResource CmoboboxStyle}" Foreground="Black" FontSize="14" FontWeight="SemiBold" Width="150" Height="30"
+                                  SelectionChanged="xSubjectCmb_SelectionChanged"></ComboBox>
+                    </StackPanel>
+
+                    <!--Test Types-->
+                    <StackPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="Test Type" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Left"></TextBlock>
+                        <ComboBox x:Name="xTestTypeCmb" Style="{StaticResource CmoboboxStyle}" Foreground="Black" FontSize="14" FontWeight="SemiBold" Width="160" Height="30"
+                                  SelectionChanged="xTestTypeCmb_SelectionChanged"></ComboBox>
+                    </StackPanel>
+                    <!--Test Id-->
+                    <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="Test Type" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Left"></TextBlock>
+                        <ComboBox x:Name="xTestIDCmb" Style="{StaticResource CmoboboxStyle}" Foreground="Black" FontSize="14" FontWeight="SemiBold" Width="160" Height="30"
+                                  SelectionChanged="xTestTypeCmb_SelectionChanged"></ComboBox>
+                    </StackPanel>
+
+                    <Grid Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="4" Background="{StaticResource ComboboxMainColorD1}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="65"></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!--Test For-->
+                        <StackPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="Test For" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Left"></TextBlock>
+                            <ComboBox x:Name="xTestFor" Style="{StaticResource CmoboboxStyle}" Foreground="Black" FontSize="14" FontWeight="SemiBold" Width="160" Height="30"
+                                  SelectionChanged="xTestFor_SelectionChanged"></ComboBox>
+                        </StackPanel>
+                        
+                        <CheckBox x:Name="xTestForCB" Content="Select particular students" Grid.Column="1" VerticalAlignment="Center" Margin="0,10,0,0"></CheckBox>
+
+
+                        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Visibility="Visible">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <!--Roll No.-->
+                                <StackPanel x:Name="xMarkCountPanel" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="Roll No." FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Left"></TextBlock>
+                                    <Border Background="{StaticResource ComboboxMainColorDark1}" Height="30" Width="160">
+                                        <Grid Width="153" Height="28" Background="{StaticResource ComboboxMainColor}" VerticalAlignment="Center">
+                                            <TextBox x:Name="xRollNoTb" FontSize="14" Height="30" BorderThickness="0" Background="Transparent" FontWeight="SemiBold"
+                                         TextChanged="xRollNoTb_TextChanged" TextAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center"></TextBox>
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+
+                                <Button x:Name="xAddStudent" Grid.Column="1" VerticalAlignment="Bottom" Content="ADD" HorizontalAlignment="Left"
+                                        Style="{StaticResource xActionButton}" Width="60" Height="30"></Button>
+                            </Grid>
+                            
+
+                            <ListView Grid.Row="1">
+                                <ListViewItem Content="ListItem 1"></ListViewItem>
+                                <ListViewItem Content="ListItem 1"></ListViewItem>
+                                <ListViewItem Content="ListItem 1"></ListViewItem>
+                                <ListViewItem Content="ListItem 1"></ListViewItem>
+                                <ListViewItem Content="ListItem 1"></ListViewItem>
+                            </ListView>
+                        </StackPanel>
+                        
+                        
+                        
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="1">
+                <Grid>
+                    <!--Topic item list-->
+                    <ListView x:Name="xTestSummary" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        Grid.Row="1" BorderThickness="2" ItemContainerStyle="{StaticResource xTestSummaryDetailStyle}" 
+                          BorderBrush="{StaticResource ComboboxMainColorDark1}" Margin="0">
+                    </ListView>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

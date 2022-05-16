@@ -1,0 +1,186 @@
+﻿<Application x:Class="LaunchTestV1.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:LaunchTestV1"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <SolidColorBrush x:Key="MainGridBackground">#FEF2E4</SolidColorBrush>
+
+        <SolidColorBrush x:Key="ComboboxMainColorDark1">#cf8e42</SolidColorBrush>
+        <SolidColorBrush x:Key="ComboboxMainColorDark2">#a35d0b</SolidColorBrush>
+        <SolidColorBrush x:Key="ComboboxMainColorDark3">#613707</SolidColorBrush>
+        <SolidColorBrush x:Key="ComboboxMainColor">#e3c29d</SolidColorBrush>
+        <SolidColorBrush x:Key="ComboboxMainColorD1">#d4ae83</SolidColorBrush>
+        <SolidColorBrush x:Key="ComboboxMainColorLight">#f0e2d3</SolidColorBrush>
+        <SolidColorBrush x:Key="ComboboxMainColor2">#d1a879</SolidColorBrush>
+        <SolidColorBrush x:Key="ComboboxMainColor3">#ffe9cf</SolidColorBrush>
+        <SolidColorBrush x:Key="WordColor2">#0f67bf</SolidColorBrush>
+
+        <!--Style for ComboBox-->
+        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="20" />
+                </Grid.ColumnDefinitions>
+                <Border x:Name="Border"  Grid.ColumnSpan="2" CornerRadius="0" Background="{StaticResource ComboboxMainColorDark1}" BorderBrush="{StaticResource ComboboxMainColorDark1}" BorderThickness="0"/>
+                <Border Grid.Column="0" CornerRadius="0" Margin="1" Background="{StaticResource ComboboxMainColor}" BorderBrush="{StaticResource ComboboxMainColorDark1}" BorderThickness="3,0,0,0" />
+                <Path x:Name="Arrow" Grid.Column="1" Fill="{StaticResource ComboboxMainColorDark3}" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 4 4 L 8 0 Z"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter TargetName="Border" Property="Background" Value="LightGray" />
+                    <Setter TargetName="Border" Property="BorderBrush" Value="Gray" />
+                    <Setter Property="Foreground" Value="Red"/>
+                    <Setter TargetName="Arrow" Property="Fill" Value="White" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ComboBoxTextBox" TargetType="TextBox">
+            <Border x:Name="PART_ContentHost" Focusable="False" Height="30" BorderThickness="0" Background="Transparent" />
+        </ControlTemplate>
+        <Style x:Key="CmoboboxStyle" TargetType="ComboBox">
+            <Setter Property="SnapsToDevicePixels" Value="true"/>
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+            <Setter Property="MinWidth" Value="120"/>
+            <Setter Property="MinHeight" Value="20"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton Name="ToggleButton" Template="{StaticResource ComboBoxToggleButton}" Grid.Column="2" Focusable="false"
+                                          IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press">
+                            </ToggleButton>
+                            <ContentPresenter Name="ContentSite" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" 
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                              Margin="8,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                            <TextBox x:Name="PART_EditableTextBox" Style="{x:Null}" Template="{StaticResource ComboBoxTextBox}" HorizontalAlignment="Left" 
+                                     VerticalAlignment="Center"  Text="{TemplateBinding Text}" Focusable="True" Background="Transparent" Visibility="Hidden" Foreground="White" 
+                                     IsReadOnly="{TemplateBinding IsReadOnly}"/>
+                            <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True"  Focusable="False" PopupAnimation="Slide">
+                                <Grid Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border x:Name="DropDownBorder" Background="{StaticResource ComboboxMainColor}" BorderThickness="4,0,0,0" BorderBrush="{StaticResource ComboboxMainColorDark2}"/>
+                                    <ScrollViewer Margin="4,0,0,0" SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="LightGray"/>
+                            </Trigger>
+                            <Trigger Property="IsGrouping" Value="true">
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                            </Trigger>
+                            <Trigger SourceName="Popup" Property="Popup.AllowsTransparency" Value="true">
+                                <Setter TargetName="DropDownBorder" Property="CornerRadius" Value="0,0,0,0"/>
+                                <Setter TargetName="DropDownBorder" Property="Margin" Value="0"/>
+                            </Trigger>
+                            <Trigger Property="IsEditable" Value="true">
+                                <Setter Property="IsTabStop" Value="false"/>
+                                <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+            </Style.Triggers>
+        </Style>
+
+        <!--Summary Details-->
+        <Style x:Key="xTestSummaryDetailStyle" TargetType="{x:Type ListViewItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border BorderBrush="{StaticResource ComboboxMainColorDark2}" BorderThickness="2" Width="610" Margin="0,3,0,0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid Background="{StaticResource ComboboxMainColor2}">
+                                    <TextBlock Text="{Binding Heading}" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                                </Grid>
+                                <ListView ItemsSource="{Binding SubSummaryList}" Grid.Row="1">
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="{x:Type ListViewItem}">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate>
+                                                        <Grid Grid.Row="2"  Height="30" ShowGridLines="False">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition></ColumnDefinition>
+                                                                <ColumnDefinition Width="40"></ColumnDefinition>
+                                                                <ColumnDefinition Width="20"></ColumnDefinition>
+                                                                <ColumnDefinition Width="50"></ColumnDefinition>
+                                                                <ColumnDefinition Width="50"></ColumnDefinition>
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBlock Text="{Binding Topic}" VerticalAlignment="Center" Margin="20,0,0,0"></TextBlock>
+                                                            <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center">
+                                                                <TextBlock Text="{Binding Mark}" FontSize="13" FontWeight="SemiBold"></TextBlock>
+                                                                <TextBlock Text="m" VerticalAlignment="Bottom" FontWeight="SemiBold"></TextBlock>
+                                                            </StackPanel>
+                                                            <TextBlock Text="x" Grid.Column="2" VerticalAlignment="Center"></TextBlock>
+                                                            <TextBlock Text="{Binding QuestionCount}" Grid.Column="3" VerticalAlignment="Center"></TextBlock>
+                                                            <StackPanel Orientation="Horizontal" Grid.Column="4" VerticalAlignment="Center">
+                                                                <TextBlock Text="{Binding TotalMark}" FontSize="13" FontWeight="SemiBold"></TextBlock>
+                                                                <TextBlock Text=" marks" VerticalAlignment="Bottom"></TextBlock>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                </ListView>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--Action Button-->
+        <Style x:Key="xActionButton" TargetType="{x:Type Button}">
+            <Style.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="3"></Setter>
+                </Style>
+            </Style.Resources>
+            <Setter Property="Background" Value="{StaticResource ComboboxMainColorDark3}"></Setter>
+            <Setter Property="Foreground" Value="White"></Setter>
+            <Setter Property="BorderBrush" Value="{StaticResource ComboboxMainColorDark3}"></Setter>
+            <Setter Property="BorderThickness" Value="2"></Setter>
+            <Setter Property="FontSize" Value="12"></Setter>
+            <Setter Property="FontFamily" Value="Roboto"></Setter>
+            <Setter Property="FontWeight" Value="Medium"></Setter>
+            <Setter Property="Height" Value="40"></Setter>
+            <Setter Property="Width" Value="120"></Setter>
+            <Setter Property="Content">
+                <Setter.Value>
+                    <ContentPresenter VerticalAlignment="Center"  HorizontalAlignment="Center">
+                    </ContentPresenter>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Value="#fcb372" Property="Background"/>
+                    <Setter Property="Foreground" Value="Black"></Setter>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Value="#fcb372" Property="Background"/>
+                </Trigger>
+            </Style.Triggers>
+
+        </Style>
+    </Application.Resources>
+</Application>
