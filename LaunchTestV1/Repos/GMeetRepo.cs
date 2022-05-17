@@ -76,6 +76,27 @@ namespace LaunchTestV1.Repos
             }
             return toReturn;
         }
+
+
+        public static void InsertScheduleData(ClassAndSubject gradeObj, string testID, List<StudentMeta> selectedStudentList)
+        {
+            using (SqlConnection con = new SqlConnection(Properties.Settings.Default.Database1))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                foreach(StudentMeta item in selectedStudentList)
+                {
+                    cmd.Parameters.Clear();
+                    cmd.CommandText = "insert into TestSchedule (SClass, Subject, TestId, StudentId) values (@SClass, @Subject, @TestId, @StudentId)";
+                    cmd.Parameters.AddWithValue("@SClass", gradeObj.Grade);
+                    cmd.Parameters.AddWithValue("@Subject", gradeObj.Subject);
+                    cmd.Parameters.AddWithValue("@TestId", testID);
+                    cmd.Parameters.AddWithValue("@StudentId", item.PPSNo);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
     public class GradeAndSection
     {

@@ -29,9 +29,11 @@ namespace LaunchTestV1
         string SelectedSection = "ALL";
 
         List<StudentMeta> StudentMasterList = new List<StudentMeta>();
+        //
         ObservableCollection<StudentMeta> ContextStudentList = new ObservableCollection<StudentMeta>();
+        ObservableCollection<StudentMeta> SelectedStudentList = new ObservableCollection<StudentMeta>();
 
-        List<StudentMeta> SelectedStudentList = new List<StudentMeta>();
+
         ObservableCollection<string> SelectedSectionList = new ObservableCollection<string>(); 
         List<TestInfo> TestItemMaster = new List<TestInfo>();
         List<GradeAndSection> GradeAndSectionList = new List<GradeAndSection>();
@@ -90,9 +92,11 @@ namespace LaunchTestV1
             {
                 SelectedSection = xSection.SelectedItem.ToString();
                 SectionSelectionProcess();
+                Process2();
+                //
                 if (SelectedSection == "ALL")
                     xTestForCB.IsChecked = false;
-
+                //
                 xSection.SelectedIndex = -1;
             }
         }
@@ -102,14 +106,8 @@ namespace LaunchTestV1
             {
                 string removeItem = xSelectedSectionList.SelectedItem.ToString();
                 SelectedSectionList.Remove(removeItem);
-
-                ContextStudentList.Clear();
-                foreach (var item in StudentMasterList)
-                {
-                    if (SelectedSectionList.Contains(item.Section))
-                        ContextStudentList.Add(item);
-                }
-
+                Process2();
+                //
                 if (SelectedSectionList.Count == 1)
                     xRollNumberPanel.Visibility = Visibility.Visible;
                 else
@@ -120,9 +118,13 @@ namespace LaunchTestV1
         private void xTestForCB_Checked(object sender, RoutedEventArgs e)
         {
             xTestForCB.IsChecked = true;
-
             if (xTestForCB.IsChecked == true)
+            {
                 xSearchStudentPanel.Visibility = Visibility.Visible;
+                SelectedStudentList = new ObservableCollection<StudentMeta>();
+                xSelectedStudentList.ItemsSource = SelectedStudentList;
+                xTotalStudentTB.Text = SelectedStudentList.Count.ToString();
+            }
             else
                 xSearchStudentPanel.Visibility = Visibility.Collapsed;
         }
@@ -136,8 +138,11 @@ namespace LaunchTestV1
         {
             if(xRollNoTB.Text.Length > 0)
             {
-                //GetStudentList();
+                List<StudentMeta> searchList = ContextStudentList.Where(o => o.StudentName.ToLower().Contains(xRollNoTB.Text.ToLower())).Select(o => o).ToList();
+                xStudentList.ItemsSource = searchList;
             }
+            else if(xRollNoTB.Text.Length == 0)
+                xStudentList.ItemsSource = ContextStudentList.Where(o => o.StudentName.ToLower().Contains(xRollNoTB.Text.ToLower())).Select(o => o).ToList();
         }
         
 
@@ -179,13 +184,37 @@ namespace LaunchTestV1
         }
         void ResetToDefault()
         {
+            ContextClass = new ClassAndSubject();
+            SelectedStudentList.Clear();
+
             xSubjectCmb.ItemsSource = null;
             xTestTypeCmb.ItemsSource = null;
             xTestIDCmb.ItemsSource = null;
             xTestSummary.ItemsSource = null;
             xSelectedStudentList.ItemsSource = null;
-
+            xSelectedSectionList.ItemsSource = null;
+            xTotalStudentTB.Text = SelectedStudentList.Count.ToString();
             xRollNoTB.Text = string.Empty;
+        }
+        void Process2()
+        {
+            if (SelectedSectionList.Count() == 1 && SelectedSectionList[0] == "ALL")
+            {
+                ContextStudentList.Clear();
+                foreach (var item in StudentMasterList)
+                    ContextStudentList.Add(item);
+            }
+            else
+            {
+                ContextStudentList.Clear();
+                foreach (var item in StudentMasterList)
+                    if (SelectedSectionList.Contains(item.Section))
+                        ContextStudentList.Add(item);
+            }
+            xStudentList.ItemsSource = ContextStudentList;
+            SelectedStudentList = ContextStudentList;
+            xTotalStudentTB.Text = SelectedStudentList.Count.ToString();
+            xSelectedStudentList.ItemsSource = SelectedStudentList;
         }
         void SectionSelectionProcess()
         {
@@ -196,30 +225,75 @@ namespace LaunchTestV1
 
                 SelectedSectionList = new ObservableCollection<string>(section);
                 xSelectedSectionList.ItemsSource = SelectedSectionList;
-                //
-                ContextStudentList.Clear();
-                foreach (var item in StudentMasterList)
-                    ContextStudentList.Add(item);
             }
             else
-            {
                 if (!SelectedSectionList.Contains(SelectedSection))
                     SelectedSectionList.Add(SelectedSection);
-
-                //
-                ContextStudentList.Clear();
-                foreach (var item in StudentMasterList)
-                {
-                    if (SelectedSectionList.Contains(item.Section))
-                        ContextStudentList.Add(item);
-                }
-            }
+            //
             if (SelectedSectionList.Count == 1)
                 xRollNumberPanel.Visibility = Visibility.Visible;
             else
                 xRollNumberPanel.Visibility = Visibility.Collapsed;
+        }
 
-            xSelectedStudentList.ItemsSource = ContextStudentList;
-        }        
+        private void xStudentList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(xStudentList.SelectedIndex >= 0)
+            {
+                StudentMeta item = xStudentList.SelectedItem as StudentMeta;
+                if(!SelectedStudentList.Contains(item))
+                {
+                    SelectedStudentList.Add(item);
+                }
+                xSelectedStudentList.ItemsSource = SelectedStudentList;
+                xTotalStudentTB.Text = SelectedStudentList.Count.ToString();
+            }
+        }
+
+        bool Validation()
+        {
+            string Error_Msg = "";
+            if (ContextClass.Grade.Length <= 0)
+            {
+                Error_Msg = "Please fill the context.";
+                MessageBox.Show(Error_Msg);
+                return false;
+            }
+            else if (ContextClass.Subject.Length <= 0)
+            {
+                Error_Msg = "Please fill the context.";
+                MessageBox.Show(Error_Msg);
+                return false;
+            }
+            else if (SelectedTestType.Length <= 0)
+            {
+                Error_Msg = "Select Test Type";
+                MessageBox.Show(Error_Msg);
+                return false;
+            }
+            else if (SelectedTestId.Length <= 0)
+            {
+                Error_Msg = "Select the Test ID.";
+                MessageBox.Show(Error_Msg);
+                return false;
+            }
+            else if (SelectedStudentList.Count <= 0)
+            {
+                Error_Msg = "You have to select atleast 1 student.";
+                MessageBox.Show(Error_Msg);
+                return false;
+            }
+            return true;
+        }
+
+        private void xCreateSchedule_Click(object sender, RoutedEventArgs e)
+        {
+            if(Validation())
+            {
+                GMeetRepo.InsertScheduleData(ContextClass, SelectedTestId, SelectedStudentList.ToList());
+                MessageBox.Show("Test Scheduled successfully..!");
+                ResetToDefault();
+            }
+        }
     }
 }
